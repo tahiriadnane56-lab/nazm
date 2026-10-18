@@ -68,6 +68,7 @@ input:focus,textarea:focus{border-color:var(--acc)}
 #ovs{width:100%;min-height:76px;font:inherit;font-size:1.7rem;font-weight:700;border:0;border-radius:18px;background:var(--acc);color:var(--on);cursor:pointer}
 @keyframes shk{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
 @media (prefers-reduced-motion:reduce){.ovi{animation:none}}
+input.bad{border-color:var(--bad)}
 .mr{display:grid;grid-template-columns:1fr 62px;gap:8px;align-items:start}
 .mr input{height:50px}
 #p2 .sj{height:50px}
@@ -184,44 +185,16 @@ function chk(){
   var n=new Date(),k=dk(n),cur=n.getHours()*60+n.getMinutes();
   S.time.forEach(function(r){if(!r.ok||!r.a||r.f===k)return;var t=pt(r.b);if(!t)return;var d=cur-(t[0]*60+t[1]);if(d>=0&&d<=15){r.f=k;save();ring(r);}});
 }
-function reg(r){
-  ac();
-  try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();}catch(e){}
-  var t=pt(r.b);
-  say(t?("سُجّل على "+pad(t[0])+":"+pad(t[1])+". يرن حتى تضغط «وقف» (والتطبيق مفتوح). وللمسكّر اضغط ⏰ منبه"):"اكتب التوقيت مثل 8:00 باش يذكّرك");
-}
-function ics(txt,t){
-  var n=new Date(),d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),t[0],t[1],0);
-  if(d<=n)d.setDate(d.getDate()+1);
-  var e=new Date(d.getTime()+15*60000);
-  function f(x){return x.getFullYear()+pad(x.getMonth()+1)+pad(x.getDate())+"T"+pad(x.getHours())+pad(x.getMinutes())+"00";}
-  var u=n.toISOString().replace(/[-:]/g,"").replace(/\.\d+/,"");
-  var tx=(txt||"تذكير").replace(/[\r\n,;]/g," ");
-  var c=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//nazm//AR","BEGIN:VEVENT","UID:"+Date.now()+"@nazm","DTSTAMP:"+u,"DTSTART:"+f(d),"DTEND:"+f(e),"SUMMARY:"+tx,"BEGIN:VALARM","TRIGGER:PT0S","ACTION:DISPLAY","DESCRIPTION:"+tx,"END:VALARM","END:VEVENT","END:VCALENDAR"].join("\r\n");
-  var a=h("a",{href:URL.createObjectURL(new Blob([c],{type:"text/calendar"})),download:"nazm.ics"});document.body.appendChild(a);a.click();a.remove();
-  say("افتح الملف nazm.ics اللي تنزّل باش يتزاد التذكير في تقويم تلفونك",true);
-}
-function phoneAlarm(txt,tm){
-  var t=pt(tm);
-  if(!t){say("اكتب التوقيت أولا، مثل 8:00");return;}
-  if(!/Android/i.test(navigator.userAgent)){ics(txt,t);return;}
-  var hid=false,f=function(){if(document.hidden)hid=true;};
-  document.addEventListener("visibilitychange",f);
-  setTimeout(function(){document.removeEventListener("visibilitychange",f);if(!hid)ics(txt,t);},1800);
-  location.href="intent:#Intent;action=android.intent.action.SET_ALARM;i.android.intent.extra.alarm.HOUR="+t[0]+";i.android.intent.extra.alarm.MINUTES="+t[1]+";S.android.intent.extra.alarm.MESSAGE="+encodeURIComponent(txt||"")+";end";
-}
 function rRows(box,arr,p1,p2,al){
   box.innerHTML="";
   arr.forEach(function(r){
     var a=h("input",{type:"text","aria-label":p1});a.value=r.a||"";
     var b=h("input",{type:"text","aria-label":p2});b.value=r.b||"";
     var s=h("button",{class:"sj"+(r.ok?" ok":""),type:"button"},[r.ok?"✓ تمّ":"سجّل"]);
-    function dirty(){r.a=a.value;r.b=b.value;r.ok=false;s.className="sj";s.textContent="سجّل";save();}
+    function dirty(){b.classList.remove("bad");r.a=a.value;r.b=b.value;r.ok=false;s.className="sj";s.textContent="سجّل";save();}
     a.oninput=dirty;b.oninput=dirty;
-    s.onclick=function(){r.a=a.value;r.b=b.value;r.ok=true;r.f=null;s.className="sj ok";s.textContent="✓ تمّ";save();if(al)reg(r);};
-    var cell=s;
-    if(al){var w=h("button",{class:"sj",type:"button",onclick:function(){phoneAlarm(a.value,b.value);}},["⏰ منبه"]);cell=h("div",{class:"sc"},[s,w]);}
-    box.appendChild(h("div",{class:"r"},[a,b,cell]));
+    s.onclick=function(){r.a=a.value;r.b=b.value;r.ok=true;r.f=null;s.className="sj ok";s.textContent="✓ تمّ";save();if(al){ac();try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();}catch(e){}b.classList.toggle("bad",!pt(b.value));}};
+    box.appendChild(h("div",{class:"r"},[a,b,s]));
   });
 }
 function rTime(){rRows($("tRows"),S.time,"الشيء","التوقيت",true);}
@@ -256,7 +229,7 @@ M.ok=(M.ok&&typeof M.ok==="object")?M.ok:{};
   function paint(){var o=!!M.ok[f[1]];btn.className="sj"+(o?" ok":"");btn.textContent=o?"✓ تمّ":"سجّل";}
   e.value=M[f[1]]||"";
   e.oninput=function(){M[f[1]]=e.value;M.ok[f[1]]=false;save();paint();calc();};
-  btn.onclick=function(){M[f[1]]=e.value;M.ok[f[1]]=true;save();paint();say("تمّ التسجيل");};
+  btn.onclick=function(){M[f[1]]=e.value;M.ok[f[1]]=true;save();paint();};
   paint();
 });
 calc();
