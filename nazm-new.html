@@ -69,6 +69,15 @@ input:focus,textarea:focus{border-color:var(--acc)}
 @keyframes shk{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
 @media (prefers-reduced-motion:reduce){.ovi{animation:none}}
 input.bad{border-color:var(--bad)}
+.stkn{font-size:1.5rem;font-weight:700}
+.wk{display:flex;gap:2px;margin-top:14px}
+.wk div{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:.7rem;color:var(--mute);text-align:center;white-space:nowrap}
+.wk .td{color:var(--ink);font-weight:700}
+.wk b{width:28px;height:28px;border-radius:50%;border:2px solid var(--line);display:block}
+.wk .on b{background:var(--acc);border-color:var(--acc)}
+.cb{margin:12px 0}.cb .top{display:flex;justify-content:space-between;gap:10px;font-size:.92rem}
+.cb .tr{height:12px;background:var(--soft);border-radius:8px;overflow:hidden;margin-top:4px}
+.cb .tr i{display:block;height:100%;border-radius:8px}
 .mr{display:grid;grid-template-columns:1fr 62px;gap:8px;align-items:start}
 .mr input{height:50px}
 #p2 .sj{height:50px}
@@ -136,11 +145,13 @@ ul{list-style:none;margin:0;padding:0}
     <p class="mute">اكتب كل مصروف في سطر والمبلغ في آخره، مثلا: أكل 2000. التطبيق يجمع آخر رقم في كل سطر.</p>
   </div>
 
+  <div class="card"><h2>وين راح المال</h2><div id="chart"></div></div>
 </section>
 
 <section id="p3" hidden><div id="quiz"></div></section>
 
 <section id="p4" hidden>
+  <div class="card" id="stk"></div>
   <form class="row" id="fD"><input type="text" id="dIn" placeholder="شنو درت؟" aria-label="إنجاز"><button class="btn" type="submit">زيد</button></form>
   <div id="dList" class="day"></div>
 </section>
@@ -210,7 +221,25 @@ function fmt(n){return (Math.round(n*100)/100).toLocaleString("en-US");}
 function cl(t){return (t||"").replace(/[٠-٩]/g,function(d){return d.charCodeAt(0)-1632;}).replace(/٫/g,".").replace(/(\d)[,\s](\d{3})(?!\d)/g,"$1$2").replace(/,/g,".");}
 function num(v){var m=cl(v).match(/\d+(?:\.\d+)?/);return m?parseFloat(m[0]):0;}
 function lastNum(l){var m=cl(l).match(/\d+(?:\.\d+)?/g);return m?parseFloat(m[m.length-1]):0;}
+function rChart(){
+  var box=$("chart");box.innerHTML="";
+  var agg={},tot=0;
+  ($("mTxt").value||"").split("\n").forEach(function(l){
+    var c=cl(l),m=c.match(/\d+(?:\.\d+)?/g);if(!m)return;
+    var last=m[m.length-1],v=parseFloat(last),i=c.lastIndexOf(last);
+    var lab=(c.slice(0,i)+" "+c.slice(i+last.length)).replace(/[:：\-–،,.]+/g," ").replace(/\s+/g," ").trim()||"بدون اسم";
+    agg[lab]=(agg[lab]||0)+v;tot+=v;
+  });
+  var ks=Object.keys(agg).sort(function(a,b){return agg[b]-agg[a];}).slice(0,8);
+  if(!ks.length){box.appendChild(h("p",{class:"mute"},["اكتب مصاريفك في الخانة فوق، وتظهر الأعمدة هنا."]));return;}
+  var col=["#2f9e62","#2a86c8","#e3a900","#8e6bd1","#e0634f","#4aa3a0","#d9772b","#7a8a99"],mx=agg[ks[0]];
+  ks.forEach(function(k,i){
+    var pc=tot?Math.round(agg[k]/tot*100):0;
+    box.appendChild(h("div",{class:"cb"},[h("div",{class:"top"},[h("span",null,[k]),h("span",null,[fmt(agg[k])+" ("+pc+"%)"])]),h("div",{class:"tr"},[h("i",{style:"width:"+(agg[k]/mx*100)+"%;background:"+col[i%col.length]})])]));
+  });
+}
 function calc(){
+  rChart();
   var sp=0;($("mTxt").value||"").split("\n").forEach(function(l){sp+=lastNum(l);});
   var bud=num($("mBud").value),goal=num($("mSav").value),has=num($("mHas").value),left=bud-sp;
   $("cSp").textContent=fmt(sp);
@@ -312,7 +341,24 @@ function rQuiz(){
 }
 
 /* ماذا فعلت اليوم */
+function dn(ts){var d=new Date(ts);return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/864e5);}
+function rStreak(){
+  var box=$("stk");box.innerHTML="";
+  var set={};S.log.forEach(function(e){set[dn(e.ts)]=1;});
+  var t=dn(Date.now()),c=set[t]?t:t-1,n=0;
+  while(set[c]){n++;c--;}
+  var ks=Object.keys(set).map(Number).sort(function(a,b){return a-b;}),best=0,run=0;
+  ks.forEach(function(k,i){run=(i&&k===ks[i-1]+1)?run+1:1;if(run>best)best=run;});
+  function w(x){return x===1?"يوم واحد":x===2?"يومان":x<=10?x+" أيام":x+" يوما";}
+  var msg=(n&&!set[t])?"سجّل شيئا اليوم باش ما تنقطعش السلسلة":(n?"برافو، كمّل!":"سجّل شيئا درتو اليوم");
+  box.appendChild(h("div",{class:"stkn"},[n?("🔥 "+w(n)+" متتالية"):"ابدأ سلسلتك اليوم"]));
+  box.appendChild(h("p",{class:"mute"},[msg+" · أطول سلسلة: "+(best?w(best):"0")]));
+  var wk=h("div",{class:"wk"}),L=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+  for(var i=6;i>=0;i--){var d=new Date();d.setDate(d.getDate()-i);wk.appendChild(h("div",{class:(set[dn(d)]?"on":"")+(i===0?" td":"")},[h("b"),L[d.getDay()]]));}
+  box.appendChild(wk);
+}
 function rDay(){
+  rStreak();
   var b=$("dList");b.innerHTML="";
   var g={};S.log.forEach(function(e){var k=dk(new Date(e.ts));(g[k]=g[k]||[]).push(e);});
   var keys=Object.keys(g).sort(function(a,c){return g[c][0].ts-g[a][0].ts;}).slice(0,7);
