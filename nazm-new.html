@@ -57,6 +57,10 @@ input:focus,textarea:focus{border-color:var(--acc)}
 .x{border:0;background:none;color:var(--mute);font-size:1.25rem;cursor:pointer;padding:0;height:30px}
 .big{min-height:55vh;resize:vertical;line-height:1.9}
 .fl{display:block;font-weight:700;margin:14px 0 6px;color:var(--acc)}
+.cr{display:flex;justify-content:space-between;gap:10px;padding:6px 0}
+.bar{height:9px;background:var(--soft);border-radius:9px;overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;background:var(--acc);width:0}
+.bar.over i{background:var(--bad)}
 .mr{display:grid;grid-template-columns:1fr 62px;gap:8px;align-items:start}
 .mr input{height:50px}
 #p2 .sj{height:50px}
@@ -113,6 +117,16 @@ ul{list-style:none;margin:0;padding:0}
     <label class="fl" for="mHas">المدخر</label>
     <div class="mr"><input type="text" inputmode="decimal" id="mHas"><button class="sj" type="button" data-k="v">سجّل</button></div>
   </div>
+  <div class="card" id="calc"><h2>الحساب التلقائي</h2>
+    <div class="cr"><span>مجموع المصروف</span><b id="cSp">0</b></div>
+    <div class="cr"><span>المتبقي من مبلغ الشهر</span><b id="cLeft">-</b></div>
+    <div class="bar"><i id="cBar"></i></div>
+    <div class="cr"><span>تقدر تصرف يوميا</span><b id="cDay">-</b></div>
+    <div class="cr"><span>المدخر من هدف الادخار</span><b id="cSv">-</b></div>
+    <div class="bar"><i id="cSBar"></i></div>
+    <p class="mute">اكتب كل مصروف في سطر والمبلغ في آخره، مثلا: أكل 2000. التطبيق يجمع آخر رقم في كل سطر.</p>
+  </div>
+
 </section>
 
 <section id="p3" hidden><div id="quiz"></div></section>
@@ -206,15 +220,33 @@ $("hAdd").onclick=function(){S.home.push({a:"",b:""});save();rHome();};
 var now=new Date(),mk=now.getFullYear()+"-"+now.getMonth();
 var M=S.money[mk];if(typeof M==="string")M={w:M};if(!M||typeof M!=="object")M={};S.money[mk]=M;
 
+function fmt(n){return (Math.round(n*100)/100).toLocaleString("en-US");}
+function cl(t){return (t||"").replace(/[٠-٩]/g,function(d){return d.charCodeAt(0)-1632;}).replace(/٫/g,".").replace(/(\d)[,\s](\d{3})(?!\d)/g,"$1$2").replace(/,/g,".");}
+function num(v){var m=cl(v).match(/\d+(?:\.\d+)?/);return m?parseFloat(m[0]):0;}
+function lastNum(l){var m=cl(l).match(/\d+(?:\.\d+)?/g);return m?parseFloat(m[m.length-1]):0;}
+function calc(){
+  var sp=0;($("mTxt").value||"").split("\n").forEach(function(l){sp+=lastNum(l);});
+  var bud=num($("mBud").value),goal=num($("mSav").value),has=num($("mHas").value),left=bud-sp;
+  $("cSp").textContent=fmt(sp);
+  $("cLeft").textContent=bud?(left>=0?fmt(left):"تجاوزت بـ "+fmt(-left)):"اكتب مبلغ الشهر";
+  $("cLeft").style.color=(bud&&left<0)?"var(--bad)":"";
+  $("cBar").style.width=bud?Math.min(sp/bud*100,100)+"%":"0";
+  $("cBar").parentNode.className="bar"+((bud&&left<0)?" over":"");
+  var nw=new Date(),days=new Date(nw.getFullYear(),nw.getMonth()+1,0).getDate()-nw.getDate()+1;
+  $("cDay").textContent=(bud&&left>0)?fmt(left/days):"-";
+  $("cSv").textContent=goal?(fmt(has)+" / "+fmt(goal)+" ("+Math.min(Math.round(has/goal*100),100)+"%)"):(has?fmt(has):"-");
+  $("cSBar").style.width=goal?Math.min(has/goal*100,100)+"%":"0";
+}
 M.ok=(M.ok&&typeof M.ok==="object")?M.ok:{};
 [["mTxt","w"],["mBud","b"],["mSav","s"],["mHas","v"]].forEach(function(f){
   var e=$(f[0]),btn=document.querySelector('.sj[data-k="'+f[1]+'"]');
   function paint(){var o=!!M.ok[f[1]];btn.className="sj"+(o?" ok":"");btn.textContent=o?"✓ تمّ":"سجّل";}
   e.value=M[f[1]]||"";
-  e.oninput=function(){M[f[1]]=e.value;M.ok[f[1]]=false;save();paint();};
+  e.oninput=function(){M[f[1]]=e.value;M.ok[f[1]]=false;save();paint();calc();};
   btn.onclick=function(){M[f[1]]=e.value;M.ok[f[1]]=true;save();paint();say("تمّ التسجيل");};
   paint();
 });
+calc();
 
 /* تحدّي الذكاء */
 var Q=[
