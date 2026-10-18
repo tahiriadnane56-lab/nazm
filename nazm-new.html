@@ -57,7 +57,9 @@ input:focus,textarea:focus{border-color:var(--acc)}
 .x{border:0;background:none;color:var(--mute);font-size:1.25rem;cursor:pointer;padding:0;height:30px}
 .big{min-height:55vh;resize:vertical;line-height:1.9}
 .fl{display:block;font-weight:700;margin:14px 0 6px;color:var(--acc)}
-.fl+input{height:50px}
+.mr{display:grid;grid-template-columns:1fr 62px;gap:8px;align-items:start}
+.mr input{height:50px}
+#p2 .sj{height:50px}
 .bar{height:9px;background:var(--soft);border-radius:9px;overflow:hidden;margin:8px 0}
 .bar i{display:block;height:100%;background:var(--acc);width:0}
 .q{display:flex;gap:10px;align-items:flex-start;font-size:1.05rem;font-weight:700;margin:0 0 12px}
@@ -103,10 +105,13 @@ ul{list-style:none;margin:0;padding:0}
 <section id="p2" hidden>
   <div class="card">
     <h2>وين راح مالك؟</h2>
-    <textarea class="big" id="mTxt" style="margin-top:8px;min-height:26vh" aria-label="وين راح مالك"></textarea>
-    <label class="fl" for="mBud">مبلغ الشهر (المصروف)</label><input type="text" inputmode="decimal" id="mBud">
-    <label class="fl" for="mSav">الادخار</label><input type="text" inputmode="decimal" id="mSav">
-    <label class="fl" for="mHas">المدخر</label><input type="text" inputmode="decimal" id="mHas">
+    <div class="mr" style="margin-top:8px"><textarea class="big" id="mTxt" style="min-height:26vh" aria-label="وين راح مالك"></textarea><button class="sj" type="button" data-k="w">سجّل</button></div>
+    <label class="fl" for="mBud">مبلغ الشهر (المصروف)</label>
+    <div class="mr"><input type="text" inputmode="decimal" id="mBud"><button class="sj" type="button" data-k="b">سجّل</button></div>
+    <label class="fl" for="mSav">الادخار</label>
+    <div class="mr"><input type="text" inputmode="decimal" id="mSav"><button class="sj" type="button" data-k="s">سجّل</button></div>
+    <label class="fl" for="mHas">المدخر</label>
+    <div class="mr"><input type="text" inputmode="decimal" id="mHas"><button class="sj" type="button" data-k="v">سجّل</button></div>
   </div>
 </section>
 
@@ -201,7 +206,15 @@ $("hAdd").onclick=function(){S.home.push({a:"",b:""});save();rHome();};
 var now=new Date(),mk=now.getFullYear()+"-"+now.getMonth();
 var M=S.money[mk];if(typeof M==="string")M={w:M};if(!M||typeof M!=="object")M={};S.money[mk]=M;
 
-[["mTxt","w"],["mBud","b"],["mSav","s"],["mHas","v"]].forEach(function(f){var e=$(f[0]);e.value=M[f[1]]||"";e.oninput=function(){M[f[1]]=e.value;save();};});
+M.ok=(M.ok&&typeof M.ok==="object")?M.ok:{};
+[["mTxt","w"],["mBud","b"],["mSav","s"],["mHas","v"]].forEach(function(f){
+  var e=$(f[0]),btn=document.querySelector('.sj[data-k="'+f[1]+'"]');
+  function paint(){var o=!!M.ok[f[1]];btn.className="sj"+(o?" ok":"");btn.textContent=o?"✓ تمّ":"سجّل";}
+  e.value=M[f[1]]||"";
+  e.oninput=function(){M[f[1]]=e.value;M.ok[f[1]]=false;save();paint();};
+  btn.onclick=function(){M[f[1]]=e.value;M.ok[f[1]]=true;save();paint();say("تمّ التسجيل");};
+  paint();
+});
 
 /* تحدّي الذكاء */
 var Q=[
