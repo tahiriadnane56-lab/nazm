@@ -61,6 +61,13 @@ input:focus,textarea:focus{border-color:var(--acc)}
 .bar{height:9px;background:var(--soft);border-radius:9px;overflow:hidden;margin:6px 0}
 .bar i{display:block;height:100%;background:var(--acc);width:0}
 .bar.over i{background:var(--bad)}
+#ov{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.6);display:grid;place-items:center;padding:20px}
+.ovb{background:var(--surface);border-radius:24px;padding:28px 20px;text-align:center;width:100%;max-width:360px}
+.ovi{font-size:3.2rem;display:inline-block;animation:shk .5s infinite alternate}
+#ovt{font-size:1.3rem;font-weight:700;margin:10px 0 22px;overflow-wrap:anywhere}
+#ovs{width:100%;min-height:76px;font:inherit;font-size:1.7rem;font-weight:700;border:0;border-radius:18px;background:var(--acc);color:var(--on);cursor:pointer}
+@keyframes shk{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+@media (prefers-reduced-motion:reduce){.ovi{animation:none}}
 .mr{display:grid;grid-template-columns:1fr 62px;gap:8px;align-items:start}
 .mr input{height:50px}
 #p2 .sj{height:50px}
@@ -88,6 +95,7 @@ ul{list-style:none;margin:0;padding:0}
 <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="var(--surface)"/><g fill="none" stroke-width="7" stroke-linecap="round" transform="rotate(-90 32 32)"><circle cx="32" cy="32" r="21" stroke="#2f9e62" stroke-dasharray="34 97.95"/><circle cx="32" cy="32" r="21" stroke="#2a86c8" stroke-dasharray="34 97.95" stroke-dashoffset="-43.98"/><circle cx="32" cy="32" r="21" stroke="#e3a900" stroke-dasharray="34 97.95" stroke-dashoffset="-87.96"/></g><path d="M22.5 33.5l7 7 12.5-15" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <div><h1>نظم حياتك</h1><p id="sub"></p></div></div></header>
 <div id="bn" role="alert" hidden></div>
+<div id="ov" role="alertdialog" aria-label="تنبيه" hidden><div class="ovb"><div class="ovi">⏰</div><div id="ovt"></div><button id="ovs" type="button">وقف</button></div></div>
 <main>
 <section id="p0">
   <div class="card">
@@ -159,14 +167,19 @@ function pad(n){return n<10?"0"+n:""+n;}
 function pt(v){var o=v||"";v=o.replace(/[٠-٩]/g,function(d){return d.charCodeAt(0)-1632;}).replace(/[hH:.]/g,":").trim();var m=v.match(/^(\d{1,2})(?::(\d{1,2}))?/);if(!m)return null;var H=+m[1],M=+(m[2]||0);if(M>59||H>24)return null;if(/pm|م|مساء|ليل/i.test(o)&&H<12)H+=12;if(H>23)return null;return [H,M];}
 var AC=null;
 function ac(){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();if(AC.state==="suspended")AC.resume();}catch(e){}}
-function beep(){if(!AC)return;var t=AC.currentTime;for(var i=0;i<4;i++){var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.3,t+i*.4);g.gain.setValueAtTime(0,t+i*.4+.25);o.start(t+i*.4);o.stop(t+i*.4+.3);}}
+function beep(){if(!AC)return;var t=AC.currentTime;for(var i=0;i<4;i++){var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=880;o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.6,t+i*.4);g.gain.setValueAtTime(0,t+i*.4+.25);o.start(t+i*.4);o.stop(t+i*.4+.3);}}
 function say(m,keep){var b=$("bn");b.textContent=m;b.hidden=false;clearTimeout(say.t);if(!keep)say.t=setTimeout(function(){b.hidden=true;},5000);b.onclick=function(){b.hidden=true;};}
+var rg=null,rq=[];
+function stopRing(){clearInterval(rg);rg=null;rq=[];$("ov").hidden=true;try{navigator.vibrate&&navigator.vibrate(0);}catch(e){}}
 function ring(r){
-  say("⏰ حان وقت: "+r.a,true);
-  try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300]);}catch(e){}
-  beep();
-  try{if("Notification" in window&&Notification.permission==="granted"&&navigator.serviceWorker)navigator.serviceWorker.ready.then(function(g){g.showNotification("نظم حياتك",{body:r.a,icon:"icon-192.png",vibrate:[300,150,300]});});}catch(e){}
+  var t=r.a||"تذكير";if(rq.indexOf(t)<0)rq.push(t);
+  $("ovt").textContent=rq.join(" · ");$("ov").hidden=false;
+  function pulse(){beep();try{navigator.vibrate&&navigator.vibrate([400,200,400]);}catch(e){}}
+  clearInterval(rg);ac();pulse();rg=setInterval(pulse,1800);
+  try{if("Notification" in window&&Notification.permission==="granted"&&navigator.serviceWorker)navigator.serviceWorker.ready.then(function(g){g.showNotification("نظم حياتك",{body:t,icon:"icon-192.png",tag:"nazm",requireInteraction:true,vibrate:[300,150,300]});});}catch(e){}
 }
+$("ovs").onclick=stopRing;
+document.addEventListener("pointerdown",ac);
 function chk(){
   var n=new Date(),k=dk(n),cur=n.getHours()*60+n.getMinutes();
   S.time.forEach(function(r){if(!r.ok||!r.a||r.f===k)return;var t=pt(r.b);if(!t)return;var d=cur-(t[0]*60+t[1]);if(d>=0&&d<=15){r.f=k;save();ring(r);}});
@@ -175,7 +188,7 @@ function reg(r){
   ac();
   try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();}catch(e){}
   var t=pt(r.b);
-  say(t?("سُجّل على "+pad(t[0])+":"+pad(t[1])+" حسب ساعة تلفونك. باش يرن والتطبيق مسكّر اضغط ⏰ منبه"):"اكتب التوقيت مثل 8:00 باش يذكّرك");
+  say(t?("سُجّل على "+pad(t[0])+":"+pad(t[1])+". يرن حتى تضغط «وقف» (والتطبيق مفتوح). وللمسكّر اضغط ⏰ منبه"):"اكتب التوقيت مثل 8:00 باش يذكّرك");
 }
 function ics(txt,t){
   var n=new Date(),d=new Date(n.getFullYear(),n.getMonth(),n.getDate(),t[0],t[1],0);
