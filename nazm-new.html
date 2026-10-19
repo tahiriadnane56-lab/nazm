@@ -6,8 +6,8 @@
 <title>نظم حياتك</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#2f9e62">
-<link rel="icon" href="icon-192.png">
-<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png?v=2">
+<link rel="apple-touch-icon" href="icon-192.png?v=2">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="نظم حياتك">
@@ -133,14 +133,14 @@ ul{list-style:none;margin:0;padding:0}
 <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="18" fill="var(--surface)"/><g fill="none" stroke-width="7" stroke-linecap="round" transform="rotate(-90 32 32)"><circle cx="32" cy="32" r="21" stroke="#2f9e62" stroke-dasharray="26 105.95"/><circle cx="32" cy="32" r="21" stroke="#2a86c8" stroke-dasharray="26 105.95" stroke-dashoffset="-32.99"/><circle cx="32" cy="32" r="21" stroke="#e3a900" stroke-dasharray="26 105.95" stroke-dashoffset="-65.97"/><circle cx="32" cy="32" r="21" stroke="#e0463f" stroke-dasharray="26 105.95" stroke-dashoffset="-98.96"/></g><path d="M22.5 33.5l7 7 12.5-15" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <div><h1>نظم حياتك</h1><p id="sub"></p></div></div></header>
 <div id="bn" role="alert" hidden></div>
-<div id="ov" role="alertdialog" aria-label="تنبيه" hidden><div class="ovb"><div class="ovi" id="ovi">⏰</div><div id="ovt"></div><p class="mute" id="ovh" hidden style="margin:-10px 0 16px"></p><button id="ovs" type="button">وقف</button></div></div>
+<div id="ov" role="alertdialog" aria-label="تنبيه" hidden><div class="ovb"><div class="ovi" id="ovi">⏰</div><div id="ovt"></div><p class="mute" id="ovh" hidden style="margin:-10px 0 16px"></p><button id="ovs" type="button">إيقاف</button></div></div>
 <main>
 <section id="p0">
   <div class="card">
     <div class="r lbl"><span>الشيء</span><span style="text-align:center">التوقيت</span><i></i></div>
-    <p class="mute" style="margin:0 0 10px">التوقيت حسب ساعة تلفونك. اكتبو مثل 8:00 أو 20:30</p>
+    <p class="mute" style="margin:0 0 10px">التوقيت حسب ساعة هاتفك. اكتبه مثل 8:00 أو 20:30</p>
     <div id="tRows"></div>
-    <button class="btn ghost" id="tAdd" type="button">+ زيد سطر</button>
+    <button class="btn ghost" id="tAdd" type="button">+ إضافة سطر</button>
   </div>
 </section>
 
@@ -148,14 +148,14 @@ ul{list-style:none;margin:0;padding:0}
   <div class="card">
     <div class="r lbl"><span>الشيء</span><span>المكان</span><i></i></div>
     <div id="hRows"></div>
-    <button class="btn ghost" id="hAdd" type="button">+ زيد سطر</button>
+    <button class="btn ghost" id="hAdd" type="button">+ إضافة سطر</button>
   </div>
 </section>
 
 <section id="p2" hidden>
   <div class="card">
-    <h2>وين راح مالك؟</h2>
-    <div class="mr" style="margin-top:8px"><textarea class="big" id="mTxt" style="min-height:26vh" aria-label="وين راح مالك"></textarea><button class="sj" type="button" data-k="w">سجّل</button></div>
+    <h2>أين ذهب مالك؟</h2>
+    <div class="mr" style="margin-top:8px"><textarea class="big" id="mTxt" style="min-height:26vh" aria-label="أين ذهب مالك"></textarea><button class="sj" type="button" data-k="w">سجّل</button></div>
     <label class="fl" for="mBud">مبلغ الشهر (المصروف)</label>
     <div class="mr"><input type="text" inputmode="decimal" id="mBud"><button class="sj" type="button" data-k="b">سجّل</button></div>
     <label class="fl" for="mSav">الادخار</label>
@@ -167,41 +167,44 @@ ul{list-style:none;margin:0;padding:0}
     <div class="cr"><span>مجموع المصروف</span><b id="cSp">0</b></div>
     <div class="cr"><span>المتبقي من مبلغ الشهر</span><b id="cLeft">-</b></div>
     <div class="bar"><i id="cBar"></i></div>
-    <div class="cr"><span>تقدر تصرف يوميا</span><b id="cDay">-</b></div>
+    <div class="cr"><span>المتاح للإنفاق يوميًا</span><b id="cDay">-</b></div>
     <div class="cr"><span>المدخر من هدف الادخار</span><b id="cSv">-</b></div>
     <div class="bar"><i id="cSBar"></i></div>
-    <p class="mute">اكتب كل مصروف في سطر والمبلغ في آخره، مثلا: أكل 2000. التطبيق يجمع آخر رقم في كل سطر.</p>
+    <p class="mute">اكتب كل مصروف في سطر والمبلغ في آخره، مثل: أكل 2000. يجمع التطبيق آخر رقم في كل سطر.</p>
   </div>
 
-  <div class="card"><h2>وين راح المال</h2><div id="chart"></div></div>
+  <div class="card"><h2>أين ذهب المال</h2><div id="chart"></div></div>
 </section>
 
 <section id="p4" hidden><div id="quiz"></div></section>
 
 <section id="p5" hidden>
   <div class="card" id="stk"></div>
-  <form class="row" id="fD"><input type="text" id="dIn" placeholder="شنو درت؟" aria-label="إنجاز"><button class="btn" type="submit">زيد</button></form>
+  <form class="row" id="fD"><input type="text" id="dIn" placeholder="ماذا فعلت؟" aria-label="إنجاز"><button class="btn" type="submit">إضافة</button></form>
   <div id="dList" class="day"></div>
 </section>
 <section id="p3" hidden>
   <div class="card">
-    <label class="fl" for="city" style="margin-top:0">المدينة (مواقيت المغرب)</label>
-    <select class="sel" id="city"></select>
+    <label class="fl" for="country" style="margin-top:0">الدولة</label>
+    <select class="sel" id="country"></select>
+    <div id="cityBox"><label class="fl" for="city">المدينة</label>
+    <select class="sel" id="city"></select></div>
+    <p class="mute" id="locNote" style="margin-top:6px"></p>
     <h2 id="prDate" style="margin-top:14px"></h2>
     <p class="mute" id="prNext"></p><p class="mute" id="prSum" style="margin-top:2px"></p>
     <div class="bar"><i id="prBar"></i></div><div id="prList" style="margin-top:12px"></div>
-    <p class="mute" style="margin-top:6px">المواقيت محسوبة حسب زاوية الفجر 19° والعشاء 17°، وهي تقريبية وقد تختلف بدقيقة أو دقيقتين عن مسجدك.</p>
+    <p class="mute" style="margin-top:6px">المواقيت محسوبة بالطريقة المعتمدة في كل دولة، وهي تقريبية وقد تختلف بضع دقائق عن التقويم الرسمي. اختر دولتك لتوافق ساعة هاتفك.</p>
   </div>
   <div class="card"><h2>آخر 7 أيام</h2><p class="mute" id="prStk" style="margin-bottom:8px"></p><div id="prWeek"></div></div>
   <div class="card"><h2>الأذان والرنين</h2>
     <label class="sw"><span>تشغيل الأذان تلقائيا عند دخول وقت كل صلاة</span><input type="checkbox" id="adOn"></label>
-    <label class="sw" style="margin-top:14px"><span>إبقاء الشاشة شغّالة باش يرن</span><input type="checkbox" id="wlOn"></label>
+    <label class="sw" style="margin-top:14px"><span>إبقاء الشاشة مضاءة ليعمل الرنين</span><input type="checkbox" id="wlOn"></label>
     <label class="sw" style="margin-top:14px"><span>إشعار أذكار الصباح والمساء</span><input type="checkbox" id="azOn"></label>
     <p class="mute" style="margin-top:6px">أذكار الصباح بعد الفجر بنصف ساعة، وأذكار المساء بعد العصر بربع ساعة.</p>
     <p class="mute" id="adFile" style="margin-top:10px"></p>
     <div class="r2"><button class="btn ghost" id="adPick" type="button">أذان آخر (اختياري)</button><button class="btn ghost" id="adTest" type="button">تجربة الأذان</button></div>
     <input type="file" id="adIn" accept="audio/*" hidden>
-    <p class="mute" style="margin-top:10px">يمكنك تشغيله أو إيقافه في أي وقت. الأذان يُسمع فقط والتطبيق مفتوح والشاشة شغّالة.</p>
+    <p class="mute" style="margin-top:10px">يمكنك تشغيله أو إيقافه في أي وقت. يُسمع الأذان فقط والتطبيق مفتوح والشاشة مضاءة.</p>
   </div>
   <div class="card"><h2>أذكار الصباح</h2><p class="mute" id="azMs"></p><div class="bar"><i id="azMb"></i></div><div id="azM" style="margin-top:10px"></div><button class="btn ghost" id="azMr" type="button">إعادة من الصفر</button></div>
   <div class="card"><h2>أذكار المساء</h2><p class="mute" id="azEs"></p><div class="bar"><i id="azEb"></i></div><div id="azE" style="margin-top:10px"></div><button class="btn ghost" id="azEr" type="button">إعادة من الصفر</button></div>
@@ -220,7 +223,7 @@ if(!Array.isArray(S.time))S.time=[];if(!Array.isArray(S.home))S.home=[];if(!Arra
 if(!S.money||typeof S.money!=="object")S.money={};
 if(!S.pr||typeof S.pr!=="object")S.pr={};
 if(!S.ad||typeof S.ad!=="object")S.ad={};
-if(!S.ad.v3){S.ad.az=true;S.ad.v3=1;}if(!S.ad.v2){S.ad.on=true;S.ad.v2=1;}S.ad.on=!!S.ad.on;S.ad.city=(+S.ad.city>=0&&+S.ad.city<30)?+S.ad.city:0;if(!S.ad.f||typeof S.ad.f!=="object")S.ad.f={};
+if(!S.ad.v3){S.ad.az=true;S.ad.v3=1;}if(!S.ad.v2){S.ad.on=true;S.ad.v2=1;}S.ad.on=!!S.ad.on;S.ad.city=(+S.ad.city>=0&&+S.ad.city<30)?+S.ad.city:0;S.ad.co=(+S.ad.co>=0&&+S.ad.co<22)?+S.ad.co:0;if(!S.ad.f||typeof S.ad.f!=="object")S.ad.f={};
 while(S.time.length<6)S.time.push({a:"",b:""});
 while(S.home.length<8)S.home.push({a:"",b:""});
 function save(){try{localStorage.setItem("life-v3",JSON.stringify(S));}catch(e){}}
@@ -238,7 +241,7 @@ function say(m,keep){var b=$("bn");b.textContent=m;b.hidden=false;clearTimeout(s
 var rg=null,rq=[];
 function stopRing(){clearInterval(rg);rg=null;rq=[];try{if(AUD){AUD.onended=null;AUD.onerror=null;AUD.pause();}}catch(e){}$("ov").hidden=true;try{navigator.vibrate&&navigator.vibrate(0);}catch(e){}}
 function ring(r){
-  $("ov").className="";$("ovi").textContent="⏰";$("ovs").textContent="وقف";$("ovh").hidden=true;
+  $("ov").className="";$("ovi").textContent="⏰";$("ovs").textContent="إيقاف";$("ovh").hidden=true;
   var t=r.a||"تذكير";if(rq.indexOf(t)<0)rq.push(t);
   $("ovt").textContent=rq.join(" · ");$("ov").hidden=false;
   function pulse(){beep();try{navigator.vibrate&&navigator.vibrate([400,200,400]);}catch(e){}}
@@ -287,7 +290,7 @@ function rChart(){
     agg[lab]=(agg[lab]||0)+v;tot+=v;
   });
   var ks=Object.keys(agg).sort(function(a,b){return agg[b]-agg[a];}).slice(0,8);
-  if(!ks.length){box.appendChild(h("p",{class:"mute"},["اكتب مصاريفك في الخانة فوق، وتظهر الأعمدة هنا."]));return;}
+  if(!ks.length){box.appendChild(h("p",{class:"mute"},["اكتب مصاريفك في الخانة أعلاه لتظهر الأعمدة هنا."]));return;}
   var col=["#2f9e62","#2a86c8","#e3a900","#8e6bd1","#e0634f","#4aa3a0","#d9772b","#7a8a99"],mx=agg[ks[0]];
   ks.forEach(function(k,i){
     var pc=tot?Math.round(agg[k]/tot*100):0;
@@ -299,7 +302,7 @@ function calc(){
   var sp=0;($("mTxt").value||"").split("\n").forEach(function(l){sp+=lastNum(l);});
   var bud=num($("mBud").value),goal=num($("mSav").value),has=num($("mHas").value),left=bud-sp;
   $("cSp").textContent=fmt(sp);
-  $("cLeft").textContent=bud?(left>=0?fmt(left):"تجاوزت بـ "+fmt(-left)):"اكتب مبلغ الشهر";
+  $("cLeft").textContent=bud?(left>=0?fmt(left):"تجاوزت بمقدار "+fmt(-left)):"اكتب مبلغ الشهر";
   $("cLeft").style.color=(bud&&left<0)?"var(--bad)":"";
   $("cBar").style.width=bud?Math.min(sp/bud*100,100)+"%":"0";
   $("cBar").parentNode.className="bar"+((bud&&left<0)?" over":"");
@@ -321,58 +324,58 @@ calc();
 
 /* تحدّي الذكاء */
 var Q=[
-["شنو أكبر دولة في إفريقيا من حيث المساحة؟",["الجزائر","السودان","الكونغو الديمقراطية","ليبيا"],0],
+["ما أكبر دولة في إفريقيا من حيث المساحة؟",["الجزائر","السودان","الكونغو الديمقراطية","ليبيا"],0],
 ["كم عدد الكواكب في المجموعة الشمسية؟",["7","8","9","10"],1],
-["مين صاحب كتاب «المقدمة»؟",["ابن سينا","ابن رشد","ابن خلدون","الفارابي"],2],
-["شنو الكوكب الأحمر؟",["الزهرة","المريخ","المشتري","عطارد"],1],
-["شنو رمز الأكسجين في الجدول الدوري؟",["O","Ox","Og","A"],0],
-["شنو أكبر محيط في العالم؟",["الأطلسي","الهندي","المتجمد الشمالي","الهادئ"],3],
-["شنو أصغر دولة في العالم مساحة؟",["موناكو","الفاتيكان","سان مارينو","مالطا"],1],
-["مين رسم لوحة «الموناليزا»؟",["مايكل أنجلو","ليوناردو دافنشي","بيكاسو","رافائيل"],1],
-["شنو أسرع حيوان بري؟",["الأسد","الحصان","النعامة","الفهد"],3],
-["شنو عاصمة اليابان؟",["طوكيو","كيوتو","أوساكا","سيول"],0],
-["مين يُنسب له علم الجبر؟",["الخوارزمي","إقليدس","فيثاغورس","ابن الهيثم"],0],
-["شنو أعلى جبل في العالم؟",["كي 2","كانشنجنجا","إفرست","كليمنجارو"],2],
+["من صاحب كتاب «المقدّمة»؟",["ابن سينا","ابن رشد","ابن خلدون","الفارابي"],2],
+["ما الكوكب الأحمر؟",["الزهرة","المريخ","المشتري","عطارد"],1],
+["ما رمز الأكسجين في الجدول الدوري؟",["O","Ox","Og","A"],0],
+["ما أكبر محيط في العالم؟",["الأطلسي","الهندي","المتجمد الشمالي","الهادئ"],3],
+["ما أصغر دولة في العالم مساحة؟",["موناكو","الفاتيكان","سان مارينو","مالطا"],1],
+["من رسم لوحة «الموناليزا»؟",["مايكل أنجلو","ليوناردو دافنشي","بيكاسو","رافائيل"],1],
+["ما أسرع حيوان بري؟",["الأسد","الحصان","النعامة","الفهد"],3],
+["ما عاصمة اليابان؟",["طوكيو","كيوتو","أوساكا","سيول"],0],
+["من يُنسب إليه علم الجبر؟",["الخوارزمي","إقليدس","فيثاغورس","ابن الهيثم"],0],
+["ما أعلى جبل في العالم؟",["كي 2","كانشنجنجا","إفرست","كليمنجارو"],2],
 ["كم عدد حروف اللغة العربية؟",["26","27","28","29"],2],
 ["كم عدد القارات؟",["5","6","7","8"],2],
 ["أي عضو يضخّ الدم في الجسم؟",["الكبد","القلب","الرئة","الكلية"],1],
-["مين وضع نظرية النسبية؟",["نيوتن","غاليليو","أينشتاين","داروين"],2],
-["شنو عاصمة تركيا؟",["إسطنبول","أنقرة","إزمير","بورصة"],1],
-["شنو أطول سلسلة جبال في العالم؟",["الألب","الهيمالايا","الأنديز","الأطلس"],2],
-["شنو أكبر عظمة في جسم الإنسان؟",["العضد","الفخذ","الجمجمة","الحوض"],1],
+["من وضع نظرية النسبية؟",["نيوتن","غاليليو","أينشتاين","داروين"],2],
+["ما عاصمة تركيا؟",["إسطنبول","أنقرة","إزمير","بورصة"],1],
+["ما أطول سلسلة جبال في العالم؟",["الألب","الهيمالايا","الأنديز","الأطلس"],2],
+["ما أكبر عظمة في جسم الإنسان؟",["العضد","الفخذ","الجمجمة","الحوض"],1],
 ["في أي سنة استقلت الجزائر؟",["1954","1958","1962","1965"],2],
-["شنو أكبر صحراء حارة في العالم؟",["الصحراء الكبرى","صحراء غوبي","كالاهاري","الربع الخالي"],0],
-["شحال عدد ألوان قوس قزح؟",["5","6","7","8"],2],
-["شنو العملة الرسمية لليابان؟",["اليوان","الين","الوون","الروبية"],1],
-["شنو الغاز الأكثر وجودًا في هواء الأرض؟",["الأكسجين","النيتروجين","ثاني أكسيد الكربون","الهيدروجين"],1],
-["شنو عاصمة أستراليا؟",["سيدني","ملبورن","كانبرا","بيرث"],2],
-["شنو أكبر كوكب في المجموعة الشمسية؟",["زحل","المشتري","نبتون","الأرض"],1],
-["مين كتب رواية «الشيخ والبحر»؟",["إرنست همنغواي","تولستوي","ديكنز","نجيب محفوظ"],0],
-["شنو أقرب كوكب إلى الشمس؟",["الزهرة","الأرض","المريخ","عطارد"],3],
-["شحال عدد أيام السنة الكبيسة؟",["364","365","366","367"],2],
-["شنو عاصمة المغرب؟",["الدار البيضاء","الرباط","فاس","مراكش"],1],
-["شنو عاصمة كندا؟",["تورونتو","مونتريال","أوتاوا","فانكوفر"],2],
-["شنو أكبر قارة من حيث المساحة؟",["إفريقيا","آسيا","أمريكا الشمالية","أوروبا"],1],
-["شنو أضخم حيوان في العالم؟",["الفيل الإفريقي","القرش الحوتي","الحوت الأزرق","الزرافة"],2],
-["شنو أكبر عضو في جسم الإنسان؟",["الكبد","الجلد","الرئة","الدماغ"],1],
-["شنو أطول نهر في إفريقيا؟",["الكونغو","النيجر","النيل","زامبيزي"],2],
-["شنو الحيوان اللي يسمّونه «سفينة الصحراء»؟",["الحصان","الجمل","الفيل","الغزال"],1],
-["شنو أعلى شلال في العالم؟",["نياغارا","فيكتوريا","أنجل","إغواسو"],2],
-["شنو أكبر جزيرة في العالم؟",["مدغشقر","غرينلاند","بورنيو","آيسلندا"],1],
-["مين أول إنسان مشى على القمر؟",["يوري غاغارين","نيل أرمسترونغ","بوز ألدرين","جون غلين"],1],
-["شنو عاصمة البرازيل؟",["ريو دي جانيرو","ساو باولو","برازيليا","سلفادور"],2],
+["ما أكبر صحراء حارة في العالم؟",["الصحراء الكبرى","صحراء غوبي","كالاهاري","الربع الخالي"],0],
+["كم عدد ألوان قوس قزح؟",["5","6","7","8"],2],
+["ما العملة الرسمية لليابان؟",["اليوان","الين","الوون","الروبية"],1],
+["ما الغاز الأكثر وجودًا في هواء الأرض؟",["الأكسجين","النيتروجين","ثاني أكسيد الكربون","الهيدروجين"],1],
+["ما عاصمة أستراليا؟",["سيدني","ملبورن","كانبرا","بيرث"],2],
+["ما أكبر كوكب في المجموعة الشمسية؟",["زحل","المشتري","نبتون","الأرض"],1],
+["من كتب رواية «الشيخ والبحر»؟",["إرنست همنغواي","تولستوي","ديكنز","نجيب محفوظ"],0],
+["ما أقرب كوكب إلى الشمس؟",["الزهرة","الأرض","المريخ","عطارد"],3],
+["كم عدد أيام السنة الكبيسة؟",["364","365","366","367"],2],
+["ما عاصمة المغرب؟",["الدار البيضاء","الرباط","فاس","مراكش"],1],
+["ما عاصمة كندا؟",["تورونتو","مونتريال","أوتاوا","فانكوفر"],2],
+["ما أكبر قارة من حيث المساحة؟",["إفريقيا","آسيا","أمريكا الشمالية","أوروبا"],1],
+["ما أضخم حيوان في العالم؟",["الفيل الإفريقي","القرش الحوتي","الحوت الأزرق","الزرافة"],2],
+["ما أكبر عضو في جسم الإنسان؟",["الكبد","الجلد","الرئة","الدماغ"],1],
+["ما أطول نهر في إفريقيا؟",["الكونغو","النيجر","النيل","زامبيزي"],2],
+["ما الحيوان الذي يُلقَّب بـ«سفينة الصحراء»؟",["الحصان","الجمل","الفيل","الغزال"],1],
+["ما أعلى شلال في العالم؟",["نياغارا","فيكتوريا","أنجل","إغواسو"],2],
+["ما أكبر جزيرة في العالم؟",["مدغشقر","غرينلاند","بورنيو","آيسلندا"],1],
+["من أول إنسان مشى على القمر؟",["يوري غاغارين","نيل أرمسترونغ","بوز ألدرين","جون غلين"],1],
+["ما عاصمة البرازيل؟",["ريو دي جانيرو","ساو باولو","برازيليا","سلفادور"],2],
 ["في أي سنة بدأت الحرب العالمية الأولى؟",["1905","1914","1918","1939"],1],
-["مين كتب كلمات النشيد الوطني الجزائري «قسمًا»؟",["مفدي زكريا","مالك حداد","محمد ديب","كاتب ياسين"],0],
-["شنو الغاز اللي تمتصّو النباتات في البناء الضوئي؟",["الأكسجين","النيتروجين","ثاني أكسيد الكربون","الهيدروجين"],2],
-["مين رسم لوحة «ليلة النجوم»؟",["فان غوخ","مونيه","دالي","رامبرانت"],0],
-["مين فاز بكأس العالم 2022؟",["فرنسا","الأرجنتين","البرازيل","كرواتيا"],1],
-["شنو أعلى برج في العالم؟",["برج خليفة","برج شنغهاي","برج إيفل","برج الساعة بمكة"],0],
-["شنو العنصر اللي رمزو Au؟",["الفضة","الذهب","الألمنيوم","النحاس"],1],
-["شنو أكثر لغة يتكلم بيها الناس كلغة أم؟",["الإنجليزية","الإسبانية","الصينية (الماندرين)","العربية"],2],
-["شحال لون في علم الجزائر؟",["2","3","4","5"],1],
-["شنو أعلى قمة جبلية في الجزائر؟",["تاهات","شيليا","لالا خديجة","تيشي"],0],
-["شنو الدولة العربية الأكثر سكانًا؟",["السعودية","الجزائر","مصر","العراق"],2],
-["مين وضع قانون الجذب العام؟",["أينشتاين","نيوتن","غاليليو","كبلر"],1]
+["من كتب كلمات النشيد الوطني الجزائري «قسمًا»؟",["مفدي زكريا","مالك حداد","محمد ديب","كاتب ياسين"],0],
+["ما الغاز الذي تمتصه النباتات في عملية البناء الضوئي؟",["الأكسجين","النيتروجين","ثاني أكسيد الكربون","الهيدروجين"],2],
+["من رسم لوحة «ليلة النجوم»؟",["فان غوخ","مونيه","دالي","رامبرانت"],0],
+["من فاز بكأس العالم 2022؟",["فرنسا","الأرجنتين","البرازيل","كرواتيا"],1],
+["ما أعلى برج في العالم؟",["برج خليفة","برج شنغهاي","برج إيفل","برج الساعة بمكة"],0],
+["ما العنصر الذي رمزه Au؟",["الفضة","الذهب","الألمنيوم","النحاس"],1],
+["ما اللغة الأكثر انتشارًا كلغة أم في العالم؟",["الإنجليزية","الإسبانية","الصينية (الماندرين)","العربية"],2],
+["كم لونًا في علم الجزائر؟",["2","3","4","5"],1],
+["ما أعلى قمة جبلية في الجزائر؟",["تاهات","شيليا","لالا خديجة","تيشي"],0],
+["ما الدولة العربية الأكثر سكانًا؟",["السعودية","الجزائر","مصر","العراق"],2],
+["من وضع قانون الجذب العام؟",["أينشتاين","نيوتن","غاليليو","كبلر"],1]
 ];
 function rng(s){return function(){s|=0;s=s+0x6D2B79F5|0;var t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 function rQuiz(){
@@ -383,7 +386,7 @@ function rQuiz(){
   var pick=ix.slice(0,20),b=$("quiz");b.innerHTML="";
   var sc=0,n=0;pick.forEach(function(qi,i){var a=S.qa.a[i];if(a!==undefined){n++;if(a===Q[qi][2])sc++;}});
   var head=h("div",{class:"card"},[h("h2",null,["تتغير الأسئلة كل يومين"]),n?h("div",{class:"score"},["نتيجتك: "+sc+" / 20"]):""]);
-  if(n)head.appendChild(h("button",{class:"btn ghost",type:"button",style:"margin-top:10px",onclick:function(){S.qa.a={};save();rQuiz();}},["عاود الأسئلة"]));
+  if(n)head.appendChild(h("button",{class:"btn ghost",type:"button",style:"margin-top:10px",onclick:function(){S.qa.a={};save();rQuiz();}},["إعادة الأسئلة"]));
   b.appendChild(head);
   pick.forEach(function(qi,i){
     var q=Q[qi],a=S.qa.a[i];
@@ -406,7 +409,7 @@ function rStreak(){
   var ks=Object.keys(set).map(Number).sort(function(a,b){return a-b;}),best=0,run=0;
   ks.forEach(function(k,i){run=(i&&k===ks[i-1]+1)?run+1:1;if(run>best)best=run;});
   function w(x){return x===1?"يوم واحد":x===2?"يومان":x<=10?x+" أيام":x+" يوما";}
-  var msg=(n&&!set[t])?"سجّل شيئا اليوم باش ما تنقطعش السلسلة":(n?"برافو، كمّل!":"سجّل شيئا درتو اليوم");
+  var msg=(n&&!set[t])?"سجّل شيئًا اليوم كي لا تنقطع السلسلة":(n?"أحسنت، واصل!":"سجّل شيئًا فعلته اليوم");
   box.appendChild(h("div",{class:"stkn"},[n?("🔥 "+w(n)+" متتالية"):"ابدأ سلسلتك اليوم"]));
   box.appendChild(h("p",{class:"mute"},[msg+" · أطول سلسلة: "+(best?w(best):"0")]));
   var wk=h("div",{class:"wk"}),L=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
@@ -418,19 +421,23 @@ var DNM=["الأحد","الاثنين","الثلاثاء","الأربعاء","ا
 function pcount(o){var n=0;PN.forEach(function(q){if(o&&o[q[0]])n++;});return n;}
 function ptg(day,k){var o=S.pr[day]=S.pr[day]||{};o[k]=o[k]?0:1;save();rPray();}
 var CITIES=[["الدار البيضاء",33.5731,-7.5898],["الرباط",34.0209,-6.8416],["مراكش",31.6295,-7.9811],["فاس",34.0331,-5.0003],["طنجة",35.7595,-5.8340],["أكادير",30.4278,-9.5981],["مكناس",33.8935,-5.5547],["وجدة",34.6814,-1.9086],["تطوان",35.5785,-5.3684],["القنيطرة",34.2610,-6.5802],["الجديدة",33.2316,-8.5007],["سطات",33.0010,-7.6166],["بني ملال",32.3373,-6.3498],["خريبكة",32.8811,-6.9063],["تازة",34.2100,-4.0100],["الناظور",35.1681,-2.9335],["الحسيمة",35.2517,-3.9372],["الصويرة",31.5085,-9.7595],["ورزازات",30.9189,-6.8934],["كلميم",28.9870,-10.0574],["العيون",27.1253,-13.1625],["الداخلة",23.6848,-15.9580]];
+var MET={MA:{fa:19,ia:17,dh:5,mg:5},DZ:{fa:18,ia:17},TN:{fa:18,ia:18},EG:{fa:19.5,ia:17.5},MWL:{fa:18,ia:17},UQ:{fa:18.5,im:90},GULF:{fa:19.5,im:90},QA:{fa:18,im:90},AE:{fa:18.2,ia:18.2},KW:{fa:18,ia:17.5},JO:{fa:18,ia:18,dh:5,mg:5}};
+var CO=[["المغرب","MA",null],["الأردن","JO",[31.9454,35.9284,"عمّان"]],["الإمارات","AE",[24.4539,54.3773,"أبو ظبي"]],["البحرين","GULF",[26.2285,50.5860,"المنامة"]],["تونس","TN",[36.8065,10.1815,"تونس"]],["الجزائر","DZ",[36.7538,3.0588,"الجزائر العاصمة"]],["جزر القمر","MWL",[-11.7172,43.2473,"موروني"]],["جيبوتي","MWL",[11.5721,43.1456,"جيبوتي"]],["السعودية","UQ",[24.7136,46.6753,"الرياض"]],["السودان","MWL",[15.5007,32.5599,"الخرطوم"]],["سوريا","MWL",[33.5138,36.2765,"دمشق"]],["الصومال","MWL",[2.0469,45.3182,"مقديشو"]],["العراق","MWL",[33.3152,44.3661,"بغداد"]],["عُمان","GULF",[23.5880,58.3829,"مسقط"]],["فلسطين","MWL",[31.7683,35.2137,"القدس"]],["قطر","QA",[25.2854,51.5310,"الدوحة"]],["الكويت","KW",[29.3759,47.9774,"مدينة الكويت"]],["لبنان","MWL",[33.8938,35.5018,"بيروت"]],["ليبيا","MWL",[32.8872,13.1913,"طرابلس"]],["مصر","EG",[30.0444,31.2357,"القاهرة"]],["موريتانيا","MWL",[18.0735,-15.9582,"نواكشوط"]],["اليمن","UQ",[15.3694,44.1910,"صنعاء"]]];
+function ploc(){var co=CO[S.ad.co]||CO[0],m=MET[co[1]];if(co[2])return {lat:co[2][0],lng:co[2][1],m:m};var c=CITIES[S.ad.city]||CITIES[0];return {lat:c[1],lng:c[2],m:m};}
 function ptimes(date){
-  var c=CITIES[S.ad.city]||CITIES[0],lat=c[1],lng=c[2],R=Math.PI/180;
+  var L=ploc(),lat=L.lat,lng=L.lng,M=L.m,R=Math.PI/180;
   var y=date.getFullYear(),mo=date.getMonth(),d=date.getDate();
   var D=Date.UTC(y,mo,d,12)/864e5+2440587.5-2451545.0-lng/360;
   var g=((357.529+0.98560028*D)%360+360)%360,q=((280.459+0.98564736*D)%360+360)%360;
-  var L=((q+1.915*Math.sin(g*R)+0.020*Math.sin(2*g*R))%360+360)%360,e=23.439-0.00000036*D;
-  var RA=Math.atan2(Math.cos(e*R)*Math.sin(L*R),Math.cos(L*R))/R/15;RA=((RA%24)+24)%24;
+  var Lg=((q+1.915*Math.sin(g*R)+0.020*Math.sin(2*g*R))%360+360)%360,e=23.439-0.00000036*D;
+  var RA=Math.atan2(Math.cos(e*R)*Math.sin(Lg*R),Math.cos(Lg*R))/R/15;RA=((RA%24)+24)%24;
   var eqt=q/15-RA;if(eqt>12)eqt-=24;if(eqt<-12)eqt+=24;
-  var decl=Math.asin(Math.sin(e*R)*Math.sin(L*R))/R,noon=12-lng/15-eqt;
+  var decl=Math.asin(Math.sin(e*R)*Math.sin(Lg*R))/R,noon=12-lng/15-eqt;
   function T(alt){var x=(Math.sin(alt*R)-Math.sin(decl*R)*Math.sin(lat*R))/(Math.cos(decl*R)*Math.cos(lat*R));x=Math.max(-1,Math.min(1,x));return Math.acos(x)/R/15;}
   var asr=Math.atan(1/(1+Math.tan(Math.abs(lat-decl)*R)))/R,base=Date.UTC(y,mo,d);
   function at(h,add){return new Date(Math.round((base+h*3600000+add*60000)/60000)*60000);}
-  return {f:at(noon-T(-19),0),d:at(noon,5),a:at(noon+T(asr),0),m:at(noon+T(-0.833),5),i:at(noon+T(-17),0)};
+  var mg=at(noon+T(-0.833),M.mg||0);
+  return {f:at(noon-T(-M.fa),0),d:at(noon,M.dh||0),a:at(noon+T(asr),0),m:mg,i:M.im?new Date(mg.getTime()+M.im*60000):at(noon+T(-M.ia),0)};
 }
 function hm(x){return pad(x.getHours())+":"+pad(x.getMinutes());}
 function rNext(){
@@ -439,7 +446,7 @@ function rNext(){
   for(var i=0;i<PN.length;i++){if(T[PN[i][0]]>n){nx=[PN[i][1],T[PN[i][0]]];break;}}
   if(!nx)nx=["الفجر",ptimes(new Date(n.getTime()+864e5)).f];
   var m=Math.max(Math.round((nx[1]-n)/60000),0),hh=Math.floor(m/60),mm=m%60;
-  el.textContent="الصلاة القادمة: "+nx[0]+" على "+hm(nx[1])+" (بعد "+(hh?hh+" س و ":"")+mm+" د)";
+  el.textContent="الصلاة القادمة: "+nx[0]+" الساعة "+hm(nx[1])+" (بعد "+(hh?hh+" ساعة و ":"")+mm+" دقيقة)";
 }
 function rPray(){
   var t=dn(Date.now()),td=S.pr[t]||{},n=pcount(td),T=ptimes(new Date());
@@ -451,7 +458,7 @@ function rPray(){
     L.appendChild(h("div",{class:"prr"+(on?" ok":"")},[h("span",null,[h("b",null,[q[1]]),h("em",null,[hm(T[q[0]])])]),h("button",{class:"sj"+(on?" ok":""),type:"button",onclick:function(){ptg(t,q[0]);}},[on?"✓ تمّت":"سجّل"])]));
   });
   var c=(pcount(S.pr[t])===5)?t:t-1,st=0;while(pcount(S.pr[c])===5){st++;c--;}
-  $("prStk").textContent=st?("🔥 "+st+(st===1?" يوم كامل":" أيام كاملة")+" متتالية"):"أتمم الصلوات الخمس باش تبدأ سلسلتك";
+  $("prStk").textContent=st?("🔥 "+st+(st===1?" يوم كامل":" أيام كاملة")+" متتالية"):"أتمم الصلوات الخمس لتبدأ سلسلتك";
   var W=$("prWeek");W.innerHTML="";
   var hd=h("div",{class:"wr h"},[h("span")]);PN.forEach(function(q){hd.appendChild(h("span",null,[q[1]]));});hd.appendChild(h("span"));W.appendChild(hd);
   for(var i=0;i<7;i++){(function(i){
@@ -463,7 +470,7 @@ function rPray(){
 }
 var AUD=null,adSrc=null,adDef=null;
 function unlockAud(){if(AUD)return;try{AUD=new Audio();AUD.muted=true;AUD.src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=";var p=AUD.play();if(p&&p.then)p.then(function(){AUD.pause();AUD.muted=false;}).catch(function(){AUD.muted=false;});}catch(e){}}
-function paintFile(){$("adFile").textContent=S.ad.name?("الملف: "+S.ad.name):(adDef?"يُستعمل أذان التطبيق. يمكنك اختيار أذان آخر من تلفونك إذا حبيت.":"ما كاين ملف أذان بعد، فيرن بصوت تنبيه. اختر ملف أذان (mp3) من تلفونك.");}
+function paintFile(){$("adFile").textContent=S.ad.name?("الملف: "+S.ad.name):(adDef?"يُستخدم أذان التطبيق. يمكنك اختيار أذان آخر من هاتفك إن شئت.":"لا يوجد ملف أذان بعد، لذلك يُشغَّل صوت تنبيه. اختر ملف أذان (mp3) من هاتفك.");}
 function loadDef(){
   if(!window.caches||!window.fetch){paintFile();return;}
   caches.open("nazm-audio").then(function(c){
@@ -480,7 +487,7 @@ function playAdhan(){
   function fallback(){if(rg)return;ac();pulse();rg=setInterval(pulse,1800);}
   if(!AUD)AUD=new Audio();
   AUD.muted=false;AUD.loop=false;AUD.onended=function(){o.hidden=true;};
-  AUD.onerror=function(){$("ovh").textContent="ما كاين ملف أذان بعد، فيرن بصوت تنبيه";$("ovh").hidden=false;fallback();};
+  AUD.onerror=function(){$("ovh").textContent="لا يوجد ملف أذان بعد، لذلك يُشغَّل صوت تنبيه";$("ovh").hidden=false;fallback();};
   AUD.src=adSrc||adDef||"adhan.mp3";
   var p=AUD.play();if(p&&p.catch)p.catch(function(){if(!AUD.error)fallback();});
   try{if("Notification" in window&&Notification.permission==="granted"&&navigator.serviceWorker)navigator.serviceWorker.ready.then(function(g){g.showNotification("وقت الصلاة",{body:"الصلاة أولا",icon:"icon-192.png",tag:"nazm-prayer",requireInteraction:true,vibrate:[500,250,500,250,500]});});}catch(e){}
@@ -557,7 +564,10 @@ var WL=null;
 function wl(){if(!S.ad.wl||!navigator.wakeLock||document.visibilityState!=="visible"||WL)return;try{navigator.wakeLock.request("screen").then(function(l){WL=l;l.addEventListener("release",function(){WL=null;});}).catch(function(){});}catch(e){}}
 document.addEventListener("visibilitychange",wl);
 CITIES.forEach(function(c,i){$("city").appendChild(h("option",{value:String(i)},[c[0]]));});
-$("city").value=String(S.ad.city);
+CO.forEach(function(c,i){$("country").appendChild(h("option",{value:String(i)},[c[0]]));});
+function syncLoc(){var co=CO[S.ad.co]||CO[0];$("cityBox").hidden=!!co[2];$("locNote").textContent=co[2]?("تُحسب المواقيت للعاصمة: "+co[2][2]):"";$("locNote").hidden=!co[2];}
+$("country").value=String(S.ad.co);$("city").value=String(S.ad.city);syncLoc();
+$("country").onchange=function(){S.ad.co=+$("country").value;S.ad.f={};save();syncLoc();rPray();};
 $("city").onchange=function(){S.ad.city=+$("city").value;S.ad.f={};save();rPray();};
 $("adOn").checked=S.ad.on;
 $("adOn").onchange=function(){S.ad.on=$("adOn").checked;save();ac();unlockAud();if(S.ad.on){try{if("Notification" in window&&Notification.permission==="default")Notification.requestPermission();}catch(e){}}};
@@ -573,9 +583,9 @@ function rDay(){
   var g={};S.log.forEach(function(e){var k=dk(new Date(e.ts));(g[k]=g[k]||[]).push(e);});
   var keys=Object.keys(g).sort(function(a,c){return g[c][0].ts-g[a][0].ts;}).slice(0,7);
   var tk=dk(new Date()),yd=new Date();yd.setDate(yd.getDate()-1);
-  if(!g[tk])b.appendChild(h("p",{class:"empty"},["ما سجّلت حتى حاجة اليوم. شنو درت؟"]));
+  if(!g[tk])b.appendChild(h("p",{class:"empty"},["لم تسجّل شيئًا اليوم بعد. ماذا فعلت؟"]));
   keys.forEach(function(k){
-    var d=new Date(g[k][0].ts),name=k===tk?"اليوم":k===dk(yd)?"البارح":d.toLocaleDateString("ar",{day:"numeric",month:"long"});
+    var d=new Date(g[k][0].ts),name=k===tk?"اليوم":k===dk(yd)?"أمس":d.toLocaleDateString("ar",{day:"numeric",month:"long"});
     b.appendChild(h("h3",null,[name+" · "+g[k].length]));
     var ul=h("ul");
     g[k].slice().sort(function(a,c){return c.ts-a.ts;}).forEach(function(e){
