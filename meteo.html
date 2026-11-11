@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Météo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23246bff'/%3E%3Ccircle cx='40' cy='24' r='11' fill='%23ffc83d'/%3E%3Cpath d='M18 48a9 9 0 010-18 12 12 0 0123 2 8 8 0 012 16z' fill='%23fff'/%3E%3C/svg%3E">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Outfit','Cairo',system-ui,sans-serif;color:#fff;background:#0a1330;min-height:100vh;overflow-x:hidden}
+#bg{position:fixed;inset:0;transition:background 1s;z-index:-2}
+#fx{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0;transition:opacity 1s}
+#fx.rain{opacity:.5;background:repeating-linear-gradient(105deg,transparent 0 18px,rgba(255,255,255,.35) 18px 19px,transparent 19px 46px);background-size:200px 200px;animation:fall .5s linear infinite}
+#fx.snow{opacity:.7;background:radial-gradient(3px 3px at 20px 30px,#fff,transparent),radial-gradient(2px 2px at 90px 80px,#fff,transparent),radial-gradient(3px 3px at 150px 20px,#fff,transparent);background-size:180px 160px;animation:fall 3s linear infinite}
+@keyframes fall{to{background-position:-60px 200px}}
+main{max-width:520px;margin:auto;padding:max(18px,env(safe-area-inset-top)) 18px 40px}
+header{display:flex;justify-content:space-between;align-items:flex-start}
+h1{font-size:30px;font-weight:600}
+.dots{display:flex;gap:7px;margin-top:8px}.dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35)}.dots i.on{background:#fff}
+.ib{background:rgba(255,255,255,.14);border:0;color:#fff;width:42px;height:42px;border-radius:50%;font-size:19px;margin-inline-start:8px;backdrop-filter:blur(8px)}
+.hero{text-align:center;padding:50px 0 34px}
+.big{font-size:150px;font-weight:200;line-height:1;letter-spacing:-6px;direction:ltr}
+.big sup{font-size:60px;font-weight:300;letter-spacing:0;vertical-align:top;position:relative;top:14px}
+.sub{font-size:20px;font-weight:300;opacity:.95;margin-top:6px}
+.card{background:rgba(10,16,34,.42);backdrop-filter:blur(14px);border-radius:24px;padding:16px 14px;margin-top:14px}
+.hrs{display:flex;overflow-x:auto;gap:6px;scrollbar-width:none}.hrs::-webkit-scrollbar{display:none}
+.h{flex:0 0 66px;text-align:center;padding:8px 2px;border-radius:18px;cursor:pointer;direction:ltr}
+.h.on{background:rgba(255,255,255,.18)}
+.h b{display:block;font-weight:400;font-size:15px}.h span{display:block;font-size:26px;margin:6px 0 2px}
+.h em{display:block;font-style:normal;font-size:20px;font-weight:300}.h small{display:block;font-size:12px;opacity:.8;margin-top:4px}
+.row{display:grid;grid-template-columns:3fr 1fr 2fr;align-items:center;padding:9px 6px;font-size:18px;direction:ltr}
+.row span:last-child{text-align:right;font-weight:300}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.three .card{margin:0;text-align:center;padding:16px 6px}.three .card div{font-size:12px;opacity:.75}
+.three .card b{display:block;font-size:26px;font-weight:300;margin-top:6px;direction:ltr}.three small{font-size:13px;opacity:.7}
+.card h3{font-size:15px;font-weight:400;opacity:.8;margin:0 6px 8px}
+svg text{font-family:inherit}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:flex-end;z-index:9}
+.sheet.show{display:flex}
+.sheet>div{background:#121a30;width:100%;max-width:520px;margin:auto;border-radius:28px 28px 0 0;padding:22px;max-height:85vh;overflow:auto}
+.sheet h2{font-size:20px;font-weight:600;margin-bottom:14px}
+select,input{width:100%;padding:13px;border-radius:14px;border:0;background:rgba(255,255,255,.1);color:#fff;font:inherit;font-size:16px;margin-bottom:12px}
+select option{color:#000}
+.li{display:flex;justify-content:space-between;padding:12px 4px;border-bottom:1px solid rgba(255,255,255,.1);font-size:16px}
+.li button{background:none;border:0;color:#fff;font-size:18px}
+.seg{display:flex;gap:8px;margin-bottom:14px}.seg button{flex:1;padding:12px;border-radius:14px;border:0;background:rgba(255,255,255,.1);color:#fff;font:inherit}.seg .on{background:#246bff}
+#splash{position:fixed;inset:0;background:linear-gradient(160deg,#0d2a7a,#246bff);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:20;transition:opacity .6s}
+#splash h2{font-size:38px;font-weight:300;letter-spacing:4px;margin-top:16px}
+.ld{text-align:center;padding:90px 0;opacity:.8}
+</style></head><body>
+<div id="bg"></div><div id="fx"></div>
+<div id="splash"><div id="logo1"></div><h2>Météo</h2></div>
+<main>
+<header><div><h1 id="cn"></h1><div class="dots" id="dots"></div></div>
+<div><button class="ib" onclick="op('cs')">＋</button><button class="ib" onclick="op('st')">⚙</button></div></header>
+<div id="v"><div class="ld">…</div></div>
+</main>
+<div class="sheet" id="cs" onclick="if(event.target==this)cl()"><div>
+<h2 id="t_cs"></h2><input id="q" oninput="sr()" autocomplete="off"><div id="rs"></div><div id="my"></div></div></div>
+<div class="sheet" id="st" onclick="if(event.target==this)cl()"><div>
+<h2 id="t_st"></h2><label id="t_lg"></label><select id="lg" onchange="S.lang=this.value;sv();ui();draw()" style="margin-top:8px"></select>
+<label id="t_un"></label><div class="seg" style="margin-top:8px"><button id="uc" onclick="S.f=0;sv();ui();draw()">°C</button><button id="uf" onclick="S.f=1;sv();ui();draw()">°F</button></div></div></div>
+<script>
+const LG={en:"English",fr:"Français",ar:"العربية",es:"Español",de:"Deutsch",it:"Italiano",pt:"Português",tr:"Türkçe",ru:"Русский",zh:"中文",ja:"日本語",hi:"हिन्दी"};
+const T={
+en:"Now|Humidity|Pressure|Visibility|Wind|Temperature this week|Search a city…|Settings|Language|Units|My cities|Today|Tomorrow|Clear|Cloudy|Fog|Drizzle|Rain|Snow|Storm|Change",
+fr:"Maint.|Humidité|Pression|Visibilité|Vent|Température de la semaine|Rechercher une ville…|Réglages|Langue|Unités|Mes villes|Aujourd'hui|Demain|Dégagé|Nuageux|Brouillard|Bruine|Pluie|Neige|Orage|Variation",
+ar:"الآن|الرطوبة|الضغط|الرؤية|الرياح|حرارة الأسبوع|ابحث عن مدينة…|الإعدادات|اللغة|الوحدات|مدني|اليوم|غدا|صافٍ|غائم|ضباب|رذاذ|مطر|ثلج|عاصفة|التغير",
+es:"Ahora|Humedad|Presión|Visibilidad|Viento|Temperatura de la semana|Buscar ciudad…|Ajustes|Idioma|Unidades|Mis ciudades|Hoy|Mañana|Despejado|Nublado|Niebla|Llovizna|Lluvia|Nieve|Tormenta|Cambio",
+de:"Jetzt|Luftfeuchte|Luftdruck|Sicht|Wind|Temperatur der Woche|Stadt suchen…|Einstellungen|Sprache|Einheiten|Meine Städte|Heute|Morgen|Klar|Bewölkt|Nebel|Nieselregen|Regen|Schnee|Gewitter|Änderung",
+it:"Ora|Umidità|Pressione|Visibilità|Vento|Temperatura della settimana|Cerca città…|Impostazioni|Lingua|Unità|Le mie città|Oggi|Domani|Sereno|Nuvoloso|Nebbia|Pioviggine|Pioggia|Neve|Temporale|Variazione",
+pt:"Agora|Umidade|Pressão|Visibilidade|Vento|Temperatura da semana|Buscar cidade…|Configurações|Idioma|Unidades|Minhas cidades|Hoje|Amanhã|Limpo|Nublado|Neblina|Garoa|Chuva|Neve|Tempestade|Variação",
+tr:"Şimdi|Nem|Basınç|Görüş|Rüzgar|Haftalık sıcaklık|Şehir ara…|Ayarlar|Dil|Birimler|Şehirlerim|Bugün|Yarın|Açık|Bulutlu|Sis|Çiseleme|Yağmur|Kar|Fırtına|Değişim",
+ru:"Сейчас|Влажность|Давление|Видимость|Ветер|Температура за неделю|Поиск города…|Настройки|Язык|Единицы|Мои города|Сегодня|Завтра|Ясно|Облачно|Туман|Морось|Дождь|Снег|Гроза|Изменение",
+zh:"现在|湿度|气压|能见度|风|本周气温|搜索城市…|设置|语言|单位|我的城市|今天|明天|晴|多云|雾|毛毛雨|雨|雪|雷暴|变化",
+ja:"今|湿度|気圧|視程|風|週間気温|都市を検索…|設定|言語|単位|マイ都市|今日|明日|晴れ|曇り|霧|霧雨|雨|雪|雷雨|変化",
+hi:"अभी|नमी|दबाव|दृश्यता|हवा|इस सप्ताह का तापमान|शहर खोजें…|सेटिंग्स|भाषा|इकाइयाँ|मेरे शहर|आज|कल|साफ़|बादल|कोहरा|बूंदाबांदी|बारिश|बर्फ़|तूफ़ान|बदलाव"};
+for(const k in T)T[k]=T[k].split("|");
+const G=[[["#1e6fd9","#6bb6ff"],["#0a1330","#1b2b66"]],[["#4b6a8c","#9db4cc"],["#10192b","#2a3550"]],[["#6f7f8c","#b0bcc6"],["#1a2128","#37424c"]],[["#3d5873","#7e9bb5"],["#0d1722","#243447"]],[["#2b3f57","#5a7694"],["#070d18","#16233a"]],[["#7d96b0","#dbe7f2"],["#1d2a3d","#4a5f7a"]],[["#2a2540","#5b4d7a"],["#07050f","#241c3a"]]];
+const IC=[["🌙","☀️"],["☁️","⛅"],["🌫️","🌫️"],["🌦️","🌦️"],["🌧️","🌧️"],["❄️","❄️"],["⛈️","⛈️"]];
+const gi=c=>c<2?0:c<4?1:c<50?2:c<60?3:c<70?4:c<80?5:c<83?4:c<95?5:6;
+const lc=navigator.language.slice(0,2);
+let S={};try{S=JSON.parse(localStorage.meteo||"{}")}catch(e){}
+S.lang=S.lang||(LG[lc]?lc:"fr");S.f=S.f||0;
+S.c=S.c||[{n:"Casablanca",la:33.589,lo:-7.603},{n:"Paris",la:48.853,lo:2.349},{n:"Tokyo",la:35.689,lo:139.692}];S.i=S.i||0;
+const sv=()=>{try{localStorage.meteo=JSON.stringify(S)}catch(e){}};
+const $=id=>document.getElementById(id);
+const t=i=>(T[S.lang]||T.en)[i];
+const D={};let H=null;
+const tp=v=>Math.round(S.f?v*9/5+32:v);
+function logo(s){return `<svg width="${s}" height="${s}" viewBox="0 0 96 96"><defs><linearGradient id="a${s}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f9bff"/><stop offset="1" stop-color="#1d3fd1"/></linearGradient><linearGradient id="b${s}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ff9b2f"/></linearGradient></defs><rect width="96" height="96" rx="24" fill="url(#a${s})"/><circle cx="60" cy="36" r="17" fill="url(#b${s})"/><path d="M27 72a14 14 0 010-28 18 18 0 0135 3 12 12 0 013 25z" fill="#fff"/><path d="M34 80l-3 8M46 80l-3 8M58 80l-3 8" stroke="#bcd8ff" stroke-width="3" stroke-linecap="round"/></svg>`}
+$("logo1").innerHTML=logo(120);
+setTimeout(()=>{$("splash").style.opacity=0;setTimeout(()=>$("splash").remove(),600)},1200);
+async function load(i){
+const c=S.c[i];if(!c)return;
+const u=`https://api.open-meteo.com/v1/forecast?latitude=${c.la}&longitude=${c.lo}&current=temperature_2m,weather_code&hourly=temperature_2m,weather_code,wind_speed_10m,relative_humidity_2m,pressure_msl,visibility&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&forecast_days=7&timezone=auto&wind_speed_unit=kmh`;
+try{const r=await fetch(u);D[i]=await r.json()}catch(e){D[i]=null;$("v").innerHTML='<div class="ld">⚠ Internet</div>'}
+}
+async function show(i){S.i=i;sv();H=null;ui();if(!D[i]){$("v").innerHTML='<div class="ld">…</div>';await load(i)}draw()}
+function ui(){
+document.documentElement.lang=S.lang;document.documentElement.dir=S.lang=="ar"?"rtl":"ltr";
+const c=S.c[S.i];$("cn").textContent=c?c.n:"";
+$("dots").innerHTML=S.c.map((_,k)=>`<i class="${k==S.i?"on":""}"></i>`).join("");
+$("t_cs").textContent=t(10);$("q").placeholder=t(6);$("t_st").textContent=t(7);$("t_lg").textContent=t(8);$("t_un").textContent=t(9);
+$("lg").innerHTML=Object.keys(LG).map(k=>`<option value="${k}" ${k==S.lang?"selected":""}>${LG[k]}</option>`).join("");
+$("uc").className=S.f?"":"on";$("uf").className=S.f?"on":"";
+$("my").innerHTML=S.c.map((c,k)=>`<div class="li"><span onclick="cl();show(${k})">${c.n}</span><button onclick="rm(${k})">✕</button></div>`).join("");
+}
+function draw(){
+const d=D[S.i];if(!d)return;
+const now=d.current.time.slice(0,13)+":00",n0=d.hourly.time.indexOf(now),n=n0<0?0:n0;
+if(H===null)H=n;
+const isDay=ts=>{const k=d.daily.time.indexOf(ts.slice(0,10));return k<0?1:(ts>=d.daily.sunrise[k]&&ts<d.daily.sunset[k])?1:0};
+const hh=d.hourly,g=gi(hh.weather_code[H]),dy=isDay(hh.time[H]);
+const day=d.daily.time.indexOf(hh.time[H].slice(0,10));
+$("bg").style.background=`linear-gradient(180deg,${G[g][dy][0]},${G[g][dy][1]})`;
+$("fx").className=g==4||g==3||g==6?"rain":g==5?"snow":"";
+const u=S.f?"°F":"°C";
+let hs="";for(let k=n;k<Math.min(n+25,hh.time.length);k++){const gg=gi(hh.weather_code[k]);
+hs+=`<div class="h ${k==H?"on":""}" onclick="H=${k};draw()"><b>${k==n?t(0):hh.time[k].slice(11,16)}</b><span>${IC[gg][isDay(hh.time[k])]}</span><em>${tp(hh.temperature_2m[k])}°</em><small>💨 ${Math.round(hh.wind_speed_10m[k])}</small></div>`}
+const dn=new Intl.DateTimeFormat(S.lang,{weekday:"short"});
+const dd=d.daily,mx=dd.temperature_2m_max,mn=dd.temperature_2m_min,av=mx.map((v,k)=>(v+mn[k])/2);
+let rows="";for(let k=0;k<3&&k<dd.time.length;k++){const gg=gi(dd.weather_code[k]);const dt=new Date(dd.time[k]+"T12:00");
+rows+=`<div class="row"><span>${dd.time[k].slice(8)}/${dd.time[k].slice(5,7)} ${k==0?t(11):k==1?t(12):dn.format(dt)}</span><span>${IC[gg][1]}</span><span>${tp(mn[k])}° / ${tp(mx[k])}°</span></div>`}
+// chart
+const W=360,Hc=210,px=k=>28+k*(W-56)/6;const lo=Math.min(...av),hi=Math.max(...av),py=v=>110-(v-lo)/((hi-lo)||1)*60;
+const pts=av.map((v,k)=>[px(k),py(v)]);
+const path=pts.map((p,k)=>(k?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1)).join(" ");
+let ch=`<svg viewBox="0 0 ${W} ${Hc}" width="100%"><defs><linearGradient id="ar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffd25a" stop-opacity=".45"/><stop offset="1" stop-color="#ffd25a" stop-opacity="0"/></linearGradient></defs><path d="${path} L${px(6)} 140 L${px(0)} 140Z" fill="url(#ar)"/><path d="${path}" fill="none" stroke="#ffd25a" stroke-width="3" stroke-linejoin="round"/>`;
+av.forEach((v,k)=>{const p=pts[k],pc=k?(v-av[k-1])/Math.abs(av[k-1]||1)*100:null;
+ch+=`<circle cx="${p[0]}" cy="${p[1]}" r="4.5" fill="#fff"/><text x="${p[0]}" y="${p[1]-12}" fill="#fff" font-size="14" text-anchor="middle">${tp(v)}°</text><text x="${p[0]}" y="162" fill="#fff" fill-opacity=".8" font-size="12" text-anchor="middle">${dn.format(new Date(dd.time[k]+"T12:00"))}</text>`;
+if(pc!==null)ch+=`<text x="${p[0]}" y="184" font-size="12" text-anchor="middle" fill="${pc>=0?"#7dffa6":"#ff9a9a"}">${pc>=0?"▲":"▼"}${Math.abs(pc).toFixed(0)}%</text>`;});
+const wk=(av[6]-av[0])/Math.abs(av[0]||1)*100;
+ch+=`</svg>`;
+$("v").innerHTML=`<div class="hero"><div class="big">${tp(hh.temperature_2m[H])}<sup>°</sup></div><div class="sub">${IC[g][dy]} ${t(13+g<=19?13+[0,1,2,3,4,5,6][g]:13)} · ${tp(mn[day<0?0:day])}° / ${tp(mx[day<0?0:day])}° ${u}</div></div>
+<div class="card"><div class="hrs">${hs}</div></div>
+<div class="card">${rows}</div>
+<div class="three"><div class="card"><div>💧 ${t(1)}</div><b>${Math.round(hh.relative_humidity_2m[H])}%</b></div><div class="card"><div>🧭 ${t(2)}</div><b>${Math.round(hh.pressure_msl[H])}</b><small>hPa</small></div><div class="card"><div>👁 ${t(3)}</div><b>${(hh.visibility[H]/1000).toFixed(hh.visibility[H]>=10000?0:1)}</b><small>km</small></div></div>
+<div class="card"><h3>${t(5)} · ${t(20)} ${wk>=0?"▲":"▼"} ${Math.abs(wk).toFixed(0)}%</h3>${ch}</div>`;
+const cl2=document.querySelector(".h.on");if(cl2&&!cl2._s){cl2._s=1}
+}
+let sx=0;
+document.addEventListener("touchstart",e=>sx=e.touches[0].clientX,{passive:true});
+document.addEventListener("touchend",e=>{if(e.target.closest(".hrs,.sheet,svg"))return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>80){const k=S.i+(dx<0?1:-1);if(k>=0&&k<S.c.length)show(k)}});
+const op=id=>{$(id).classList.add("show");if(id=="cs")setTimeout(()=>$("q").focus(),50)};
+const cl=()=>document.querySelectorAll(".sheet").forEach(s=>s.classList.remove("show"));
+let tm;
+function sr(){clearTimeout(tm);const q=$("q").value.trim();if(q.length<2){$("rs").innerHTML="";return}
+tm=setTimeout(async()=>{try{const r=await(await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(q)}&count=8&language=${S.lang}`)).json();
+window.R=r.results||[];$("rs").innerHTML=R.map((c,k)=>`<div class="li" onclick="ad(${k})"><span>${c.name}${c.admin1?", "+c.admin1:""} · ${c.country||""}</span><button>＋</button></div>`).join("")}catch(e){}},350)}
+function ad(k){const c=R[k];S.c.push({n:c.name,la:c.latitude,lo:c.longitude});$("q").value="";$("rs").innerHTML="";sv();cl();show(S.c.length-1)}
+function rm(k){if(S.c.length<2)return;S.c.splice(k,1);for(const x in D)delete D[x];S.i=0;sv();ui();show(0)}
+ui();show(S.i);
+</script></body></html>
